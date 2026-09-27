@@ -129,5 +129,5 @@ table, device name/type via feature `0x0005`) rather than depending on Logitech'
 
 ## License
 
-Personal project — no license file included. `native/win-x64/hidapi.dll` is a third-party binary
-under its own license (see above); everything else in this repository is unlicensed by default.
+MIT — see [LICENSE](LICENSE). This covers this project's own code only;
+`native/win-x64/hidapi.dll` is a third-party binary under its own license (see above).
