@@ -1,0 +1,41 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <AssemblyName>LogiBoltTray</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\LogiBoltTray.Protocol\LogiBoltTray.Protocol.csproj" />
+    <ProjectReference Include="..\..\src\LogiBoltTray.Hid\LogiBoltTray.Hid.csproj" />
+    <ProjectReference Include="..\..\src\LogiBoltTray.Core\LogiBoltTray.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- UseWPF + UseWindowsForms + ImplicitUsings together make the SDK add an implicit
+         global using for both System.Windows and System.Windows.Forms, and both namespaces
+         declare Application/MessageBox — causing CS0104 ambiguous-reference errors anywhere
+         those types are used unqualified. Remove the WinForms implicit using so System.Windows
+         (WPF) stays the unambiguous default; files that need WinForms types (e.g. NotifyIcon)
+         add their own explicit "using System.Windows.Forms;". -->
+    <Using Remove="System.Windows.Forms" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- The HidApi.Net NuGet package ships ONLY the managed P/Invoke binding — it does not
+         bundle the native hidapi.dll. Without the native library next to the exe, the very
+         first HidApi call throws DllNotFoundException at launch. The official libusb/hidapi
+         0.15.0 x64 build is vendored in this repo under native/win-x64/ and copied to the
+         output (and publish) directory here so no manual step is ever required.
+         Note: CopyToOutputDirectory implies CopyToPublishDirectory for None items, so this
+         also lands loose beside LogiBoltTray.exe in a PublishSingleFile output — which is
+         exactly where the native loader looks. -->
+    <None Include="..\..\native\win-x64\hidapi.dll" Link="hidapi.dll" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>

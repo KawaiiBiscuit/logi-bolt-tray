@@ -1,0 +1,5 @@
+bin/
+obj/
+.superpowers/
+.claude/
+.DS_Store
